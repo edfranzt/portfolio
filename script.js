@@ -25,19 +25,34 @@ Object.entries(localLogos).forEach(([name,path])=>{
   });
 });
 
-/* True layer parallax: move the entire grid independently from the page content. */
-const parallaxLayerStyle=document.createElement('style');
-parallaxLayerStyle.textContent='.grid-bg{z-index:0!important;pointer-events:none!important;will-change:transform;background-position:0 0!important}.grid-bg:after{pointer-events:none!important;will-change:transform}body>header,body>main,body>.footer{position:relative;z-index:1}';
-document.head.appendChild(parallaxLayerStyle);
+/* Animated SEO atom / network hero visual. */
+const atomStyle=document.createElement('style');
+atomStyle.textContent=`
+.hero-visual{will-change:transform;transform:translate3d(0,0,0)}
+.hero-visual .orbit{transform-origin:50% 50%;will-change:transform}
+.hero-visual .orbit-a{animation:seoOrbitA 12s linear infinite}
+.hero-visual .orbit-b{animation:seoOrbitB 16s linear infinite reverse}
+.hero-visual .network{animation:seoNetwork 10s ease-in-out infinite}
+.hero-visual .node{animation:seoNode 3.5s ease-in-out infinite}
+.hero-visual .n1{animation-delay:-.8s}.hero-visual .n2{animation-delay:-1.6s}.hero-visual .n3{animation-delay:-2.4s}.hero-visual .n4{animation-delay:-3.2s}
+.hero-visual .core{animation:seoCore 4s ease-in-out infinite}
+@keyframes seoOrbitA{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes seoOrbitB{from{transform:rotate(360deg)}to{transform:rotate(0deg)}}
+@keyframes seoNetwork{0%,100%{transform:scale(1) rotate(0deg);opacity:.72}50%{transform:scale(1.025) rotate(1deg);opacity:1}}
+@keyframes seoNode{0%,100%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(0,-7px,0) scale(1.04)}}
+@keyframes seoCore{0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(85,214,255,.08)}50%{transform:scale(1.035);box-shadow:0 0 55px rgba(85,214,255,.16)}}
+@media (prefers-reduced-motion:reduce){.hero-visual .orbit,.hero-visual .network,.hero-visual .node,.hero-visual .core{animation:none!important}}
+`;
+document.head.appendChild(atomStyle);
 
-const grid=document.querySelector('.grid-bg');
+/* Scroll parallax for the atom: the whole SEO visual drifts subtly as the hero scrolls. */
+const heroVisual=document.querySelector('.hero-visual');
 let ticking=false;
 function updateParallax(){
   const y=window.scrollY;
-  if(grid){
-    grid.style.transform=`translate3d(0,${Math.round(y*0.14)}px,0)`;
-    grid.style.setProperty('--glow-y',`${Math.round(y*0.22)}px`);
-    grid.style.setProperty('--glow-x',`${Math.sin(y*0.002)*28}px`);
+  if(heroVisual){
+    const drift=Math.min(y*.10,90);
+    heroVisual.style.transform=`translate3d(0,${-drift}px,0)`;
   }
   ticking=false;
 }
