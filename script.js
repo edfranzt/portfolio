@@ -10,7 +10,8 @@ const revealItems=document.querySelectorAll('.section,.stats,.placement');
 const revealObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')});},{threshold:.08});
 revealItems.forEach(el=>{el.classList.add('reveal');revealObserver.observe(el)});
 
-/* Use local logo assets so the toolkit never depends on third-party image URLs. */
+/* Force local logo assets. CSS previously pointed to external files, so use !important
+   to make the local assets win even if the stylesheet is cached or loaded later. */
 const localLogos={
   ahrefs:'assets/ahrefs.svg',
   sheets:'assets/google-sheets.svg',
@@ -19,9 +20,9 @@ const localLogos={
 };
 Object.entries(localLogos).forEach(([name,path])=>{
   document.querySelectorAll(`.tool-icon.${name}`).forEach(icon=>{
-    icon.style.backgroundImage=`url('${path}')`;
-    icon.style.backgroundColor='transparent';
-    icon.style.fontSize='0';
+    icon.style.setProperty('background-image',`url('${path}')`,'important');
+    icon.style.setProperty('background-color','transparent','important');
+    icon.style.setProperty('font-size','0','important');
   });
 });
 
