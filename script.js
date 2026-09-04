@@ -19,11 +19,28 @@ const localLogos={
 };
 Object.entries(localLogos).forEach(([name,path])=>{
   document.querySelectorAll(`.tool-icon.${name}`).forEach(icon=>{
-    icon.style.setProperty('background-image',`url('${path}')`,'important');
+    icon.style.setProperty('background-image','none','important');
     icon.style.setProperty('background-color','transparent','important');
     icon.style.setProperty('font-size','0','important');
+    icon.style.setProperty('color','transparent','important');
+    icon.style.setProperty('text-indent','-9999px','important');
+    icon.textContent='';
+    icon.querySelectorAll('img,svg').forEach(el=>el.remove());
+    const img=document.createElement('img');
+    img.src=path;
+    img.alt=name==='ahrefs'?'Ahrefs':name;
+    img.style.cssText='width:70%;height:70%;object-fit:contain;display:block;margin:auto;';
+    icon.appendChild(img);
   });
 });
+
+/* Prevent any existing pseudo-element/icon fallback from covering the real Ahrefs SVG. */
+const logoFixStyle=document.createElement('style');
+logoFixStyle.textContent=`
+.tool-icon.ahrefs::before,.tool-icon.ahrefs::after{content:none!important;display:none!important}
+.tool-icon.ahrefs img{width:70%!important;height:70%!important;object-fit:contain!important;display:block!important;margin:auto!important}
+`;
+document.head.appendChild(logoFixStyle);
 
 /* Animated SEO atom / network hero visual. */
 const atomStyle=document.createElement('style');
