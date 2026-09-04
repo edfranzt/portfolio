@@ -12,7 +12,7 @@ revealItems.forEach(el=>{el.classList.add('reveal');revealObserver.observe(el)})
 
 /* Force local logo assets. */
 const localLogos={
-  ahrefs:'assets/ahrefs.svg',
+  ahrefs:'assets/ahrefs-logo.svg',
   sheets:'assets/google-sheets.svg',
   workspace:'assets/google-workspace.svg',
   google:'assets/google-search.svg'
