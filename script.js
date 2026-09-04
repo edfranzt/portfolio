@@ -10,6 +10,21 @@ const revealItems=document.querySelectorAll('.section,.stats,.placement');
 const revealObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')});},{threshold:.08});
 revealItems.forEach(el=>{el.classList.add('reveal');revealObserver.observe(el)});
 
+/* Use local logo assets so the toolkit never depends on third-party image URLs. */
+const localLogos={
+  ahrefs:'assets/ahrefs.svg',
+  sheets:'assets/google-sheets.svg',
+  workspace:'assets/google-workspace.svg',
+  google:'assets/google-search.svg'
+};
+Object.entries(localLogos).forEach(([name,path])=>{
+  document.querySelectorAll(`.tool-icon.${name}`).forEach(icon=>{
+    icon.style.backgroundImage=`url('${path}')`;
+    icon.style.backgroundColor='transparent';
+    icon.style.fontSize='0';
+  });
+});
+
 /* Grid parallax. The previous version injected background-position: ... !important,
    which overrode the inline value set below, so the grid could not move. */
 const grid=document.querySelector('.grid-bg');
