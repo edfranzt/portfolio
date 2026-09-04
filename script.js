@@ -10,8 +10,7 @@ const revealItems=document.querySelectorAll('.section,.stats,.placement');
 const revealObserver=new IntersectionObserver(entries=>{entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')});},{threshold:.08});
 revealItems.forEach(el=>{el.classList.add('reveal');revealObserver.observe(el)});
 
-/* Force local logo assets. CSS previously pointed to external files, so use !important
-   to make the local assets win even if the stylesheet is cached or loaded later. */
+/* Force local logo assets. */
 const localLogos={
   ahrefs:'assets/ahrefs.svg',
   sheets:'assets/google-sheets.svg',
@@ -26,17 +25,17 @@ Object.entries(localLogos).forEach(([name,path])=>{
   });
 });
 
-/* Grid parallax. The previous version injected background-position: ... !important,
-   which overrode the inline value set below, so the grid could not move. */
+/* Noticeable but still smooth background parallax. The grid is fixed and repeats,
+   so moving its background position creates depth without exposing empty space. */
 const grid=document.querySelector('.grid-bg');
 let ticking=false;
 function updateParallax(){
   const y=window.scrollY;
   if(grid){
-    grid.style.backgroundPosition=`0 ${y*0.035}px`;
-    grid.style.setProperty('--glow-y',`${y*0.07}px`);
-    grid.style.setProperty('--glow-x',`${Math.sin(y*0.002)*18}px`);
-    grid.style.setProperty('--glow-speed',`${y*0.055}px`);
+    const gridOffset=Math.round(y*0.16);
+    grid.style.setProperty('background-position',`0 ${gridOffset}px`,'important');
+    grid.style.setProperty('--glow-y',`${Math.round(y*0.09)}px`);
+    grid.style.setProperty('--glow-x',`${Math.sin(y*0.002)*24}px`);
   }
   ticking=false;
 }
