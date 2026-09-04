@@ -25,17 +25,19 @@ Object.entries(localLogos).forEach(([name,path])=>{
   });
 });
 
-/* Noticeable but still smooth background parallax. The grid is fixed and repeats,
-   so moving its background position creates depth without exposing empty space. */
+/* True layer parallax: move the entire grid independently from the page content. */
+const parallaxLayerStyle=document.createElement('style');
+parallaxLayerStyle.textContent='.grid-bg{z-index:0!important;pointer-events:none!important;will-change:transform;background-position:0 0!important}.grid-bg:after{pointer-events:none!important;will-change:transform}body>header,body>main,body>.footer{position:relative;z-index:1}';
+document.head.appendChild(parallaxLayerStyle);
+
 const grid=document.querySelector('.grid-bg');
 let ticking=false;
 function updateParallax(){
   const y=window.scrollY;
   if(grid){
-    const gridOffset=Math.round(y*0.16);
-    grid.style.setProperty('background-position',`0 ${gridOffset}px`,'important');
-    grid.style.setProperty('--glow-y',`${Math.round(y*0.09)}px`);
-    grid.style.setProperty('--glow-x',`${Math.sin(y*0.002)*24}px`);
+    grid.style.transform=`translate3d(0,${Math.round(y*0.14)}px,0)`;
+    grid.style.setProperty('--glow-y',`${Math.round(y*0.22)}px`);
+    grid.style.setProperty('--glow-x',`${Math.sin(y*0.002)*28}px`);
   }
   ticking=false;
 }
